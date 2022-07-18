@@ -1,0 +1,28 @@
+# This is from a generated file.
+load("@crates_io_index//:defs.bzl", "aliases", "all_crate_deps")
+
+load("@rules_rust//rust:defs.bzl", "rust_library", "rust_test")
+
+sh_test(
+    name = "check-generated",
+    srcs = ["check-generated.sh"],
+    # According to the sh_test docs, 'srcs' must be a singleton list,
+    # and other scripts (like regenerate.sh) must be under 'data'.
+    data = ["grammar.js", "Cargo.lock", "Cargo.toml"] + glob(["src/**", "bindings/**"]),
+)
+
+rust_library(
+    name = "tree-sitter-nbts-lib",
+    srcs = glob(["bindings/rust/*.rs", "src/**/*.h", "**/*.c"]),
+    aliases = aliases(),
+    edition = "2021",
+    proc_macro_deps = all_crate_deps(proc_macro = True),
+    deps = all_crate_deps(normal = True),
+)
+
+# rust_test(
+#     name = "unit_test",
+#     crate = ":cargo_local",
+#     proc_macro_deps = all_crate_deps(proc_macro_dev = True),
+#     deps = all_crate_deps(normal_dev = True),
+# )

@@ -1,0 +1,55 @@
+{
+  "name": "aaa",
+  "rules": {
+    "source_file": {
+      "type": "SYMBOL",
+      "name": "expr"
+    },
+    "expr": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "PATTERN",
+          "value": "[0-9]+"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "let_expr"
+        }
+      ]
+    },
+    "let_expr": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "let"
+        },
+        {
+          "type": "PATTERN",
+          "value": "[a-z]+"
+        },
+        {
+          "type": "STRING",
+          "value": "in"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expr"
+        }
+      ]
+    }
+  },
+  "extras": [
+    {
+      "type": "PATTERN",
+      "value": "\\s"
+    }
+  ],
+  "conflicts": [],
+  "precedences": [],
+  "externals": [],
+  "inline": [],
+  "supertypes": []
+}
+

@@ -1,0 +1,59 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "io_tweag_rules_nixpkgs",
+    strip_prefix = "rules_nixpkgs-3425eb1cddee0f824944e04258f43c97a2e78cc3",
+    urls = ["https://github.com/tweag/rules_nixpkgs/archive/3425eb1cddee0f824944e04258f43c97a2e78cc3.tar.gz"],
+)
+load("@io_tweag_rules_nixpkgs//nixpkgs:repositories.bzl", "rules_nixpkgs_dependencies")
+rules_nixpkgs_dependencies()
+load("@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl", "nixpkgs_git_repository", "nixpkgs_package")
+
+nixpkgs_git_repository(
+    name = "nixpkgs",
+    revision = "22.05",
+    sha256 = "0f8c25433a6611fa5664797cd049c80faefec91575718794c701f3b033f2db01",
+)
+
+# rules_rust also uses the cc compiler
+load("@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl", "nixpkgs_cc_configure")
+
+nixpkgs_cc_configure(
+    name = "nixpkgs_config_cc",
+    repository = "@nixpkgs",
+)
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:toolchains/rust.bzl", "nixpkgs_rust_configure")
+
+nixpkgs_rust_configure(
+    repository = "@nixpkgs//:default.nix",
+    name = "nix_rust",
+)
+
+http_archive(
+    name = "rules_rust",
+    sha256 = "7fb9b4fe1a6fb4341bdf7c623e619460ecc0f52d5061cc56abc750111fba8a87",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_rust/releases/download/0.7.0/rules_rust-v0.7.0.tar.gz",
+        "https://github.com/bazelbuild/rules_rust/releases/download/0.7.0/rules_rust-v0.7.0.tar.gz",
+    ],
+)
+
+load("@rules_rust//rust:repositories.bzl", "rust_repositories")
+
+rust_repositories()
+
+load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
+crate_universe_dependencies()
+
+load("@rules_rust//crate_universe:defs.bzl", "crates_repository")
+crates_repository(
+    name = "crates_io_index",
+    cargo_lockfile = "//tree-sitter-nbts:Cargo.lock",
+    manifests = ["//tree-sitter-nbts:Cargo.toml"],
+)
+
+# This is from a generated file.
+load("@crates_io_index//:defs.bzl", "crate_repositories")
+
+crate_repositories()

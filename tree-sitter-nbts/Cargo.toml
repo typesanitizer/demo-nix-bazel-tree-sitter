@@ -1,0 +1,31 @@
+[package]
+name = "tree-sitter-aaa"
+description = "aaa grammar for the tree-sitter parsing library"
+version = "0.0.1"
+keywords = ["incremental", "parsing", "aaa"]
+categories = ["parsing", "text-editors"]
+repository = "https://github.com/tree-sitter/tree-sitter-aaa"
+edition = "2018"
+license = "MIT"
+
+build = "bindings/rust/build.rs"
+include = [
+  "bindings/rust/*",
+  "grammar.js",
+  "queries/*",
+  "src/*",
+]
+
+[lib]
+name = "tree_sitter_aaa_lib"
+path = "bindings/rust/lib.rs"
+
+[[bin]]
+name = "tree_sitter_aaa_bin"
+path = "main.rs"
+
+[dependencies]
+tree-sitter = "~0.20"
+
+[build-dependencies]
+cc = "1.0"
